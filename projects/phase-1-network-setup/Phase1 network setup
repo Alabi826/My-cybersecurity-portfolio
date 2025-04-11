@@ -60,6 +60,4 @@ Reflection
 This phase successfully simulated a basic network environment. All machines can communicate, and pfSense acts as the DHCP server and gateway. This is the foundation for future exercises like vulnerability scanning, firewall testing, and intrusion detection.
 
 
-Next Step
-	•	Access pfSense via web GUI: http://192.168.1.1
-	•	Begin logging, firewall rule creation, and traffic monitoring
+
