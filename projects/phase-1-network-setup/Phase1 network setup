@@ -1,0 +1,65 @@
+# Phase 1: Virtual Cybersecurity Lab Setup
+
+## Objective
+Set up a basic internal network using VirtualBox with Ubuntu (attacker machine), Windows 10 (target machine), and pfSense (router/firewall) for learning and testing cybersecurity tools.
+
+---
+
+## Lab Architecture
+
+**Virtual Machines:**
+- **Ubuntu VM**
+  - Role: Attacker / Analyst
+  - IP: `192.168.1.100`
+- **Windows 10 VM**
+  - Role: Target / Victim
+  - IP: `192.168.1.101`
+- **pfSense VM**
+  - Role: Router + DHCP + Firewall
+  - WAN IP: `192.168.0.10`
+  - LAN IP: `192.168.1.1`
+
+**Network Type:**  
+Internal network (`LabNet`) connected through pfSense
+
+---
+
+## Network Configuration Summary
+
+| VM        | Adapter Type      | Network Name | IP Address     | Purpose         |
+|-----------|-------------------|--------------|----------------|-----------------|
+| pfSense   | Adapter 1: NAT     | -            | 192.168.0.10   | Internet access |
+| pfSense   | Adapter 2: Internal| LabNet       | 192.168.1.1    | LAN gateway     |
+| Ubuntu    | Adapter 1: Internal| LabNet       | 192.168.1.100  | Lab attacker    |
+| Windows   | Adapter 1: Internal| LabNet       | 192.168.1.101  | Lab target      |
+
+---
+
+## Connectivity Tests
+
+### Ping from Ubuntu:
+```bash
+ping 192.168.1.101  # Windows
+ping 192.168.1.1    # pfSense
+
+### Ping from Windows:
+ping 192.168.1.100  # Ubuntu
+ping 192.168.1.1    # pfSense
+Ping from pfSense:
+	•	Option 7 > Ping host 192.168.1.100 (Ubuntu) → ✅
+	•	Option 7 > Ping host 192.168.1.101 (Windows) → Initially failed, fixed by enabling ICMP in Windows Firewall
+
+
+
+Fixes Made
+	•	Enabled ICMP Echo Request rule in Windows Firewall to allow ping from pfSense
+	•	Location: Control Panel > Windows Defender Firewall > Advanced Settings > Inbound Rules
+
+Reflection
+
+This phase successfully simulated a basic network environment. All machines can communicate, and pfSense acts as the DHCP server and gateway. This is the foundation for future exercises like vulnerability scanning, firewall testing, and intrusion detection.
+
+
+Next Step
+	•	Access pfSense via web GUI: http://192.168.1.1
+	•	Begin logging, firewall rule creation, and traffic monitoring
