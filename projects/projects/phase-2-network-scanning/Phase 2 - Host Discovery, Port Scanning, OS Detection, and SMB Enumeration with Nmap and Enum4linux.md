@@ -1,5 +1,7 @@
 ## Phase 2: Network Scanning & Enumeration
 
+## Date: 11 April 2025
+
 ### Target IP: `192.168.1.101`
 
 ---
