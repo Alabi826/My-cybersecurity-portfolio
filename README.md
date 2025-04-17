@@ -7,7 +7,7 @@ Welcome to my cybersecurity portfolio! This repository documents my growth from 
 
 ## About Me
 
-- **Name:** Boluwatife Akintunde Omo Alabi  
+- **Name:** Boluwatife Akintunde Alabi  
 - **Current Role:** Healthcare Assistant (Domiciliary Care) | Aspiring Cybersecurity Professional  
 - **Certifications:** CompTIA Network+, CompTIA Security+, ISC2 Certified in Cybersecurity (CC)  
 - **Learning Focus:**  
@@ -47,61 +47,70 @@ A virtualized lab environment built using VirtualBox to simulate and secure a ho
 
 ---
 
-### Phase 1: Virtual Lab Setup
-- Created two isolated networks within VirtualBox
-- Configured internal network adapters for Ubuntu and Windows VMs
-- Installed and configured pfSense as a router/firewall between the two networks
-- Verified IP assignment, connectivity, and routing between devices
+### Phase 1: Virtual Lab Setup (Single LAN)
+- All systems were initially configured on the same internal network.
+- **Ubuntu:** `192.168.1.100`  
+- **Windows 10:** `192.168.1.101`  
+- **pfSense LAN (Gateway):** `192.168.1.1`
+- Successfully verified communication across all machines.
 
 ---
 
 ### Phase 2: Network Scanning & Reconnaissance
-- Conducted scanning from Ubuntu attacker machine to discover hosts and open ports
-- Commands used:
+- Conducted scanning from Ubuntu to discover hosts and open ports.
+- Used the following commands:
   ```bash
-  nmap -sn 10.10.10.0/24
-  nmap -sS -sV 10.10.10.10
-  nmap -O 10.10.10.10
+  nmap -sn 192.168.1.0/24
+  nmap -sS -sV 192.168.1.101
+  nmap -O 192.168.1.101
   ```
-- Performed OS fingerprinting, service version detection, and host discovery
-- Documented scans with flags used and result interpretation
+- Performed OS fingerprinting, service version detection, and host discovery.
+- Documented scan logic and output in command journal.
 
 ---
 
-### Phase 3: Firewall Rule Testing with pfSense
+### Phase 3: Firewall Rule Testing with pfSense (Segmented Networks)
+
+Network was restructured to separate Ubuntu and Windows 10 into different networks for better traffic control and security testing:
+
+- **Ubuntu Segment:**
+  - Ubuntu: `192.168.1.100`
+  - pfSense LAN1 (Ubuntu side): `192.168.1.1`
+- **Windows Segment:**
+  - Windows 10: `192.168.2.100`
+  - pfSense LAN2 (Windows side): `192.168.2.1`
 
 #### Phase 3Ai – ICMP Control
-- Configured pfSense firewall rules to **block and allow ICMP (ping)** between Ubuntu and Windows machines
-- Verified rule effectiveness using `ping` and traceroute
-- Demonstrated behavior before and after rule application
+- Created pfSense rules to **allow/block ICMP traffic** between Ubuntu and Windows networks.
+- Used `ping` and `traceroute` to confirm traffic behavior before and after rule changes.
 
 #### Phase 3Aii – Inter-network Traffic Filtering
-- Ensured proper segmentation between Ubuntu and Windows networks
-- Created firewall rules in pfSense to explicitly allow or deny specific traffic types
+- Implemented custom pfSense rules to explicitly permit or deny communication between network segments.
+- Verified behavior using tools like `ping` and `netcat`.
 
 #### Phase 3B – Port and Service Filtering
-- Applied firewall rules to control access to specific TCP/UDP ports
-- Verified using Nmap scans with the following:
+- Configured pfSense to control traffic based on specific TCP/UDP ports.
+- Used Nmap to test access from Ubuntu to Windows:
   ```bash
-  nmap -p 80,139,445 10.10.10.10
-  nmap -sU -p 137 10.10.10.10
+  nmap -p 80,139,445 192.168.2.100
+  nmap -sU -p 137 192.168.2.100
   ```
 
 #### Phase 3Bii – Advanced Scanning & SMB Enumeration
-- Used Nmap NSE scripts:
+- Ran Nmap with NSE scripts for SMB service probing:
   ```bash
-  nmap --script=smb-enum-shares.nse,smb-os-discovery.nse -p 445 10.10.10.10
+  nmap --script=smb-enum-shares.nse,smb-os-discovery.nse -p 445 192.168.2.100
   ```
-- Verified whether pfSense could successfully block traffic to TCP port 445
-- Used SMBClient to attempt access to shares on the Windows machine
+- Used **SMBClient** to test SMB share accessibility based on firewall status.
+- Verified successful blocking of TCP port 445 using pfSense.
 
 ---
 
 ### Phase 4A (In Progress): Vulnerability Scanning
-- Setting up OpenVAS or alternative scanner
-- Target: Windows 10 machine
-- Goal: Identify vulnerabilities and misconfigurations, simulate detection and documentation
-- Will document findings and create remediation steps
+- Planning to deploy OpenVAS (on Kali or Ubuntu) to scan the Windows 10 target.
+- Goals:
+  - Identify common vulnerabilities and misconfigurations.
+  - Document findings and simulate a basic incident response process.
 
 ---
 
@@ -120,9 +129,9 @@ A virtualized lab environment built using VirtualBox to simulate and secure a ho
 ## Next Steps
 
 - Complete Phase 4A (vulnerability scanning)
-- Begin documentation of log analysis and detection (e.g., using Syslog or Splunk in future)
-- Continue refining Linux and Python skills
-- Prepare for Microsoft SC-200 exam
+- Document and simulate basic SIEM/log correlation (e.g., with Syslog or Splunk)
+- Continue sharpening Python and Linux command-line skills
+- Begin preparation for Microsoft SC-200 exam
 
 ---
 
